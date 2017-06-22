@@ -7,6 +7,13 @@
         mc:Ignorable="d"
         Title="Resources.Lua Generator" Height="350" Width="525">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="273*"/>
+            <RowDefinition Height="46*"/>
+        </Grid.RowDefinitions>
+        <ScrollViewer >
+            <StackPanel x:Name="stackpanel" Margin="0"/>
+        </ScrollViewer>
+        <Button x:Name="button" Content="Generate LUA code" Margin="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="45" Click="button_Click"/>
     </Grid>
 </Window>
