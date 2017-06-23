@@ -56,55 +56,71 @@ namespace ResourcesLua
             var response = client.PostAsync(steamApiUrl + "/ISteamRemoteStorage/GetCollectionDetails/v0001/", content).Result;
             if (!response.IsSuccessStatusCode)
             {
-                MessageBox.Show("Api Key might be invalid!");
+                MessageBox.Show("Something went wrong please make sure, you are using a valid API key and a valid collection ID!");
+                CredentialInputForm c = new CredentialInputForm(steamApiKey, collectionID);
+                c.Show();
+                this.Close();
+                return;
             }
             var responseString = response.Content.ReadAsStringAsync().Result;
             // MessageBox.Show(responseString);
 
-            JToken collection = JObject.Parse(responseString)["response"]["collectiondetails"][0];
-
-            IList<JToken> collChildren = collection["children"].Children().ToList();
-
-
-            postParameters.Clear();
-            postParameters.Add("itemcount", collChildren.Count.ToString());
-            postParameters.Add("key", steamApiKey);
-            postParameters.Add("format", "json");
-            postParameters.Add("collectioncount", "1");
-
-            int i = 0;
-            foreach (JToken c in collChildren)
+            try
             {
-                postParameters.Add("publishedfileids[" + i.ToString() + "]", c["publishedfileid"].ToString());
-                i++;
-            }
-            content = new FormUrlEncodedContent(postParameters);
-            response = client.PostAsync(steamApiUrl + "/ISteamRemoteStorage/GetPublishedFileDetails/v0001/", content).Result;
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Api Key might be invalid!");
-            }
-            responseString = response.Content.ReadAsStringAsync().Result;
-            //MessageBox.Show(responseString);
-            IList<JToken> addons = JObject.Parse(responseString)["response"]["publishedfiledetails"].Children().ToList();
-            i = 0;
-            foreach (JToken addon in addons)
-            {
-                try
+                JToken collection = JObject.Parse(responseString)["response"]["collectiondetails"][0];
+
+                IList<JToken> collChildren = collection["children"].Children().ToList();
+
+
+                postParameters.Clear();
+                postParameters.Add("itemcount", collChildren.Count.ToString());
+                postParameters.Add("key", steamApiKey);
+                postParameters.Add("format", "json");
+                postParameters.Add("collectioncount", "1");
+
+                int i = 0;
+                foreach (JToken c in collChildren)
                 {
-                    WorkshopItemUi w = new WorkshopItemUi(
-                       addon["publishedfileid"].ToString(),
-                       addon["title"].ToString(),
-                       addon["description"].ToString(),
-                       addon["preview_url"].ToString(),
-                        client,
-                        img);
-                    stackpanel.Children.Add(w);
+                    postParameters.Add("publishedfileids[" + i.ToString() + "]", c["publishedfileid"].ToString());
+                    i++;
                 }
-                catch (Exception ex) { i++; }
+                content = new FormUrlEncodedContent(postParameters);
+                response = client.PostAsync(steamApiUrl + "/ISteamRemoteStorage/GetPublishedFileDetails/v0001/", content).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Api Key might be invalid!");
+                }
+                responseString = response.Content.ReadAsStringAsync().Result;
+                //MessageBox.Show(responseString);
+                IList<JToken> addons = JObject.Parse(responseString)["response"]["publishedfiledetails"].Children().ToList();
+                i = 0;
+                foreach (JToken addon in addons)
+                {
+                    try
+                    {
+                        WorkshopItemUi w = new WorkshopItemUi(
+                           addon["publishedfileid"].ToString(),
+                           addon["title"].ToString(),
+                           addon["description"].ToString(),
+                           addon["preview_url"].ToString(),
+                            client,
+                            img);
+                        stackpanel.Children.Add(w);
+                    }
+                    catch (Exception ex) { i++; }
+                }
+                MessageBox.Show(i.ToString() + " Addon" + (i > 1 ? "s" : "") + " could not be loaded!");
+
+            }
+            catch (Exception ex) //pokemon etc. etc.
+            {
+                MessageBox.Show("Something went wrong please make sure, you are using a valid API key and a valid collection ID!");
+                CredentialInputForm c = new CredentialInputForm(steamApiKey, collectionID);
+                c.Show();
+                this.Close();
+                return;
             }
 
-            MessageBox.Show(i.ToString() + " Addon" + (i>1?"s":"") + " could not be loaded!");
         }
 
         private void button_Click(object sender, RoutedEventArgs e)
@@ -120,6 +136,7 @@ namespace ResourcesLua
             if (r == null)
             {
                 r = new resultWindow(result);
+                r.Closing += R_Closing;
             }
             else
             {
@@ -127,6 +144,11 @@ namespace ResourcesLua
             }
             r.Show();
 
+        }
+
+        private void R_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            r = null;
         }
     }
 }

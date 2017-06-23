@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ResourcesLua"
              mc:Ignorable="d" 
-             d:DesignHeight="50" d:DesignWidth="300" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" MaxHeight="75" Height="40" MinHeight="30" Margin="5" MouseEnter="userControl_MouseEnter" MouseLeave="userControl_MouseLeave">
+             d:DesignHeight="50" d:DesignWidth="300" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}" MaxHeight="75" Height="40" MinHeight="30" Margin="5" MouseEnter="userControl_MouseEnter" MouseLeave="userControl_MouseLeave"  MouseUp="userControl_MouseUp">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding ActualHeight, ElementName=userControl, Mode=OneWay}"/>

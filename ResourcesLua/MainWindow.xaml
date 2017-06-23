@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ResourcesLua"
         mc:Ignorable="d"
-        Title="Resources.Lua Generator" Height="350" Width="525">
+        Title="Resources.Lua Generator - Check items you want to force-download" Height="350" Width="530" MinWidth="400" MinHeight="500" Icon="pack://application:,,,/ResourcesLua;component/Resources/Icon1.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="273*"/>
@@ -14,6 +14,6 @@
         <ScrollViewer >
             <StackPanel x:Name="stackpanel" Margin="0"/>
         </ScrollViewer>
-        <Button x:Name="button" Content="Generate LUA code" Margin="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="45" Click="button_Click"/>
+        <Button x:Name="button" Content="Generate LUA code" Margin="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="button_Click" Padding="5"/>
     </Grid>
 </Window>

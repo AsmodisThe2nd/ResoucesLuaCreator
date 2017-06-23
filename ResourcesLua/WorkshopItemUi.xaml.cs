@@ -73,6 +73,7 @@ namespace ResourcesLua
             this.client = client;
             //this.ToolTip = description;
             thumbnail = new BitmapImage(new Uri(workshopThumbnailUrl));
+            image.ToolTip = workshopDescription;
         }
 
         public string getResourceString()
@@ -94,6 +95,11 @@ namespace ResourcesLua
         private void userControl_MouseLeave(object sender, MouseEventArgs e)
         {
             this.Background = previousColor;
+        }
+
+        private void userControl_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            checkBox.IsChecked = !checkBox.IsChecked;
         }
     }
 }
