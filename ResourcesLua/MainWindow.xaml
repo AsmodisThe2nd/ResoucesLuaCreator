@@ -14,6 +14,10 @@
         <ScrollViewer >
             <StackPanel x:Name="stackpanel" Margin="0"/>
         </ScrollViewer>
-        <Button x:Name="button" Content="Generate LUA code" Margin="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="button_Click" Padding="5"/>
+        <Button x:Name="button" Content="Generate LUA code" Margin="0" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="button_Click" Padding="5" UseLayoutRounding="True">
+            <Button.Effect>
+                <DropShadowEffect Direction="100" BlurRadius="10" Opacity="0.2" ShadowDepth="0"/>
+            </Button.Effect>
+        </Button>
     </Grid>
 </Window>

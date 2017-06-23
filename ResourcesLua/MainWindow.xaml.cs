@@ -38,35 +38,34 @@ namespace ResourcesLua
 
         public MainWindow(string steamApiKey, string collectionID)
         {
-            img = new BitmapImage(new Uri("pack://application:,,,/ResourcesLua;component/Resources/placeholder.png"));
-
-            this.collectionID = collectionID;
-
             InitializeComponent();
+            img = new BitmapImage(new Uri("pack://application:,,,/ResourcesLua;component/Resources/placeholder.png"));
+            this.collectionID = collectionID;
             this.steamApiKey = steamApiKey;
             client = new HttpClient();
-            var postParameters = new Dictionary<string, string>
-            {
-                { "format", "json" },
-                {"key", steamApiKey },
-                {"publishedfileids[0]",  collectionID},
-                {"collectioncount", "1" }
-            };
-            var content = new FormUrlEncodedContent(postParameters);
-            var response = client.PostAsync(steamApiUrl + "/ISteamRemoteStorage/GetCollectionDetails/v0001/", content).Result;
-            if (!response.IsSuccessStatusCode)
-            {
-                MessageBox.Show("Something went wrong please make sure, you are using a valid API key and a valid collection ID!");
-                CredentialInputForm c = new CredentialInputForm(steamApiKey, collectionID);
-                c.Show();
-                this.Close();
-                return;
-            }
-            var responseString = response.Content.ReadAsStringAsync().Result;
-            // MessageBox.Show(responseString);
-
             try
             {
+                var postParameters = new Dictionary<string, string>
+                {
+                    { "format", "json" },
+                    {"key", steamApiKey },
+                    {"publishedfileids[0]",  collectionID},
+                    {"collectioncount", "1" }
+                };
+                var content = new FormUrlEncodedContent(postParameters);
+                var response = client.PostAsync(steamApiUrl + "/ISteamRemoteStorage/GetCollectionDetails/v0001/", content).Result;
+                if (!response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Something went wrong please make sure, you are using a valid API key and a valid collection ID!");
+                    CredentialInputForm c = new CredentialInputForm(steamApiKey, collectionID);
+                    c.Show();
+                    this.Close();
+                    return;
+                }
+                var responseString = response.Content.ReadAsStringAsync().Result;
+                // MessageBox.Show(responseString);
+
+
                 JToken collection = JObject.Parse(responseString)["response"]["collectiondetails"][0];
 
                 IList<JToken> collChildren = collection["children"].Children().ToList();
@@ -88,7 +87,7 @@ namespace ResourcesLua
                 response = client.PostAsync(steamApiUrl + "/ISteamRemoteStorage/GetPublishedFileDetails/v0001/", content).Result;
                 if (!response.IsSuccessStatusCode)
                 {
-                    MessageBox.Show("Api Key might be invalid!");
+                    MessageBox.Show("Api Key might be invalid!", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 responseString = response.Content.ReadAsStringAsync().Result;
                 //MessageBox.Show(responseString);
@@ -98,18 +97,24 @@ namespace ResourcesLua
                 {
                     try
                     {
+                        List<string> tags = new List<string>();
+                        foreach (JToken tag in addon["tags"].Children().ToList<JToken>())
+                        {
+                            tags.Add(tag["tag"].ToString());
+                        }
                         WorkshopItemUi w = new WorkshopItemUi(
                            addon["publishedfileid"].ToString(),
                            addon["title"].ToString(),
                            addon["description"].ToString(),
                            addon["preview_url"].ToString(),
+                           tags,
                             client,
                             img);
                         stackpanel.Children.Add(w);
                     }
                     catch (Exception ex) { i++; }
                 }
-                MessageBox.Show(i.ToString() + " Addon" + (i > 1 ? "s" : "") + " could not be loaded!");
+                MessageBox.Show(i.ToString() + " Addon" + (i > 1 ? "s" : "") + " could not be loaded!", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
 
             }
             catch (Exception ex) //pokemon etc. etc.

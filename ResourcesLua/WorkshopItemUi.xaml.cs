@@ -59,7 +59,7 @@ namespace ResourcesLua
             workshopId = id;
         }
 
-        public WorkshopItemUi(string id, string title, string description, string thumb, HttpClient client, BitmapImage placeholder)
+        public WorkshopItemUi(string id, string title, string description, string thumb, List<string> tags, HttpClient client, BitmapImage placeholder)
         {
             InitializeComponent();
 
@@ -73,7 +73,21 @@ namespace ResourcesLua
             this.client = client;
             //this.ToolTip = description;
             thumbnail = new BitmapImage(new Uri(workshopThumbnailUrl));
-            image.ToolTip = workshopDescription;
+            bool isMap = false;
+            string tt = workshopDescription + "\r\n\r\n" + "Tags: ";
+            int i = 0;
+            foreach (string tag in tags)
+            {
+                if (tag == "map")
+                {
+                    isMap = true;
+                }
+                tt += tag + ((i + 1) < tags.Count ? ", " : "");
+                i++;
+            }
+            this.checkBox.IsChecked = !isMap;
+
+            image.ToolTip = tt;
         }
 
         public string getResourceString()

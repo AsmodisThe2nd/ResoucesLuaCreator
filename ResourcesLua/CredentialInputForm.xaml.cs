@@ -56,6 +56,7 @@ namespace ResourcesLua
         private void button_Click(object sender, RoutedEventArgs e)
         {
             this.Cursor = Cursors.AppStarting;
+            this.Effect = new System.Windows.Media.Effects.BlurEffect();
             MainWindow m = new MainWindow(textBox.Text, textBox_Copy.Text);
             this.Cursor = Cursors.Arrow;
             var propertyInfo = typeof(Window).GetProperty("IsDisposed", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -86,6 +87,36 @@ namespace ResourcesLua
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             System.Diagnostics.Process.Start(e.Uri.ToString());
+        }
+
+        private void textBox_Copy_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (textBox.Text == apiEnterMessage ||
+                textBox.Text == "" ||
+                textBox_Copy.Text == workshopIdEnterMessage ||
+                textBox_Copy.Text == "")
+            {
+                button.IsEnabled = false;
+            }
+            else
+            {
+                button.IsEnabled = true;
+            }
+        }
+
+        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (textBox.Text == apiEnterMessage ||
+                textBox.Text == "" ||
+                textBox_Copy.Text == workshopIdEnterMessage ||
+                textBox_Copy.Text == "")
+            {
+                return;
+            }
+            if (e.Key == Key.Enter)
+            {
+                button_Click(sender, null);
+            }
         }
     }
 }
