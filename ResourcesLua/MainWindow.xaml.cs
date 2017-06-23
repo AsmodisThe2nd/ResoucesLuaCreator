@@ -98,10 +98,15 @@ namespace ResourcesLua
                     try
                     {
                         List<string> tags = new List<string>();
-                        foreach (JToken tag in addon["tags"].Children().ToList<JToken>())
+                        try
                         {
-                            tags.Add(tag["tag"].ToString());
+                            foreach (JToken tag in addon["tags"].Children().ToList<JToken>())
+                            {
+                                tags.Add(tag["tag"].ToString());
+                            }
                         }
+                        catch (Exception ex) { /* maybe there are no tags */}
+
                         WorkshopItemUi w = new WorkshopItemUi(
                            addon["publishedfileid"].ToString(),
                            addon["title"].ToString(),
